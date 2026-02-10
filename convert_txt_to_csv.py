@@ -7,9 +7,10 @@ def parse_transcript_to_csv(input_file, output_file):
     with open(input_file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
-    csv_lines = ["from;to;speaker;content"]
+    csv_lines = ["Line;From;To;Speaker;Content"]
 
     i = 0
+    line_count = 1
     while i < len(lines):
         line = lines[i].strip()
 
@@ -43,8 +44,9 @@ def parse_transcript_to_csv(input_file, output_file):
 
             # Create CSV line
             if content:  # Only add if there's actual content
-                csv_line = f"{time_from};{time_to};{speaker};{content}"
+                csv_line = f"{line_count};{time_from};{time_to};{speaker};{content}"
                 csv_lines.append(csv_line)
+                line_count += 1
         else:
             i += 1
 
