@@ -55,17 +55,16 @@ def parse_transcript_to_csv(input_file, output_file):
     print(f"Converted {input_file} -> {output_file}")
     print(f"Total entries: {len(csv_lines) - 1}")
 
-# Process both files
-base_dir = "/media/bachleu/Data/tai lieu oregon/HCI 2/Projects/data/audio - transcript/ai"
+# Process all txt files in the current directory
+txt_files = [f for f in os.listdir('.') if f.endswith('.txt')]
 
-files_to_process = [
-    ("participant 1.txt", "participant 1.csv"),
-    ("Participant 2 (Audio Interview part).txt", "Participant 2 (Audio Interview part).csv")
-]
+for txt in txt_files:
+    # Create CSV filename by replacing .docx with .csv
+    csv_file = txt.replace('.txt', '.csv')
 
-for input_file, output_file in files_to_process:
-    input_path = os.path.join(base_dir, input_file)
-    output_path = os.path.join(base_dir, output_file)
-    parse_transcript_to_csv(input_path, output_path)
+    try:
+        parse_transcript_to_csv(txt, csv_file)
+    except Exception as e:
+        print(f"Error processing {txt}: {e}")
 
-print("\nConversion complete!")
+print(f"\nProcessed {len(txt_files)} files")

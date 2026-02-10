@@ -2,7 +2,8 @@ import os
 import json
 import base64
 from dotenv import load_dotenv
-from elevenlabs import ElevenLabs, ExportOptions_Docx
+from elevenlabs import ElevenLabs, ExportOptions_Txt
+from convert_txt_to_csv import parse_transcript_to_csv
 
 def main():
     os.system('clear')
@@ -15,28 +16,31 @@ def main():
     )
 
     # Load mp3 file and transcribe
-    audio_file = "input.mp3"
+    audio_file = "Participant 3.m4a"
     print("Loading audio " + audio_file + " ...")
     with open(audio_file, "rb") as audio_data:
-        print("Transcirbing...")
+        print("Transcribing...")
         transcription = client.speech_to_text.convert(
             file=audio_data,
             model_id="scribe_v2",
             diarize=True,
             tag_audio_events=False,
             language_code="en",
-            additional_formats=[ExportOptions_Docx()]
+            additional_formats=[ExportOptions_Txt()]
         )
 
     # Get the base64 content
-    base64_content = transcription.additional_formats[0].content
+    content = transcription.additional_formats[0].content
 
-    # Decode base64 and save to Docx file
-    docx_decoded = base64.b64decode(base64_content)
-    docx_file = "result.docx"
-    print ("Saving " + docx_file + " ...")
-    with open(docx_file, "wb") as docx_data:
-        docx_data.write(docx_decoded)
+    txt_file = "result.txt"
+    print ("Saving " + txt_file + " ...")
+    with open(txt_file, "w") as txt:
+        txt.write(content)
+    
+    # Convert to csv
+    csv_file = txt_file.replace('.txt', '.csv')
+    parse_transcript_to_csv(txt_file, csv_file)
+
 
 if __name__ == "__main__":
     main()

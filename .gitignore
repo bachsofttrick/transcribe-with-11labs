@@ -1,5 +1,8 @@
 *.docx*
+result.txt
 *.mp3
+*.m4a
+*.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
